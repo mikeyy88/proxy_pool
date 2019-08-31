@@ -33,9 +33,9 @@ HEADER = """
 
 PY3 = sys.version_info >= (3,)
 
-DB_TYPE = getenv('db_type', 'SSDB').upper()
+DB_TYPE = getenv('db_type', 'redis').upper()
 DB_HOST = getenv('db_host', '127.0.0.1')
-DB_PORT = getenv('db_port', '8080')
+DB_PORT = getenv('db_port', '6379')
 DB_PASSWORD = getenv('db_password', '')
 
 """ 数据库配置 """
@@ -61,6 +61,9 @@ PROXY_GETTER = [
     "freeProxy07",
     "freeProxy08",
     "freeProxy09",
+    "freeProxy10",
+    # "freeProxy11",
+    # "freeProxy12",
 ]
 
 """ API config http://127.0.0.1:5010 """
