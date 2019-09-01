@@ -20,6 +20,7 @@ sys.path.append('..')
 
 from Util.WebRequest import WebRequest
 from Util.utilFunction import getHtmlTree
+from bs4 import BeautifulSoup
 
 # for debug to disable insecureWarning
 requests.packages.urllib3.disable_warnings()
@@ -285,11 +286,34 @@ class GetFreeProxy(object):
             for proxy in proxies:
                 yield ':'.join(proxy)
 
+    @staticmethod
+    def freeProxy13(page_count=3):
+        """
+        http://www.89ip.cn/index_1.html
+        免费代理库
+        :return:
+        """
+        import bs4
+        request = WebRequest()
+        for i in range(1, page_count + 1):
+            url = 'http://www.89ip.cn/index_{}.html'.format(i)
+            r = request.get(url, timeout=10)
+            soup = BeautifulSoup(r.text, 'html.parser')
+            proxies=[]
+            for tr in soup.find_all('tr'):  # 找到所有的article标签，分别对每个article标签做处理
+                if isinstance(tr, bs4.element.Tag):  # 判断我们找到的article是否为HTML标签
+                    tds = tr('td')  # 找到一个article标签下的所有a标签
+                    # ulist.append(tds[0].string)
+                    if len(tds) == 0:
+                        continue
+                    # print(tds[0].string.strip()+":"+tds[1].string.strip())
+                    yield tds[0].string.strip()+":"+tds[1].string.strip()
+
 
 if __name__ == '__main__':
     from CheckProxy import CheckProxy
 
-    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy01)
+    # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy01)
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy02)
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy03)
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy04)
@@ -298,5 +322,7 @@ if __name__ == '__main__':
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy07)
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy08)
     # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy09)
+
+    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxy13)
 
     CheckProxy.checkAllGetProxyFunc()
